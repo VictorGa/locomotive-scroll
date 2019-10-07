@@ -259,7 +259,7 @@
           }
 
           if (el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
-            if (el.anchorOffset && scrollTop >= el.anchorTop && scrollTop < el.anchorBottom) {
+            if (el.anchorOffset && scrollTop >= el.anchorTop && scrollTop < el.bottom) {
               _this2.setInAnchorView(el, i);
             }
           }
