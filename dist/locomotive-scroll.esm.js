@@ -532,7 +532,7 @@ function (_Core) {
         anchorOffset = parseInt(el.dataset[this.name + 'AnchorOffset']);
         anchorOffset = el.offsetHeight * (anchorOffset / 100);
       } else {
-        anchorOffset = parseInt(offset);
+        anchorOffset = parseInt(anchorOffset);
       }
 
       return {
