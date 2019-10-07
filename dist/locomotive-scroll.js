@@ -261,8 +261,6 @@
             }
           }
 
-          console.log(el.anchorTop);
-
           if (el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
             if (el.anchorOffset && scrollBottom >= el.anchorTop && scrollTop < el.bottom) {
               _this2.setInAnchorView(el, i);
@@ -310,7 +308,7 @@
         current.el.classList.add(current.anchorClass);
 
         if (current.call && this.hasCallEventSet) {
-          this.dispatchCall(current, 'secondary-enter');
+          this.dispatchCall(current, 'anchor-enter');
 
           if (!current.repeat) {
             this.els[i].call = false;
