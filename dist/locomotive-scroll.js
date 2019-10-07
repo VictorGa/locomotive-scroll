@@ -508,7 +508,7 @@
             top: top + offset,
             anchorTop: top + anchorOffset,
             bottom: bottom,
-            anchorBottom: bottom - anchorOffset / 2,
+            anchorBottom: bottom - anchorOffset,
             offset: offset,
             anchorOffset: anchorOffset,
             repeat: repeat,
@@ -565,7 +565,7 @@
           _this5.els[i].offset = offset;
           _this5.els[i].anchorOffset = anchorOffset;
           _this5.els[i].bottom = bottom;
-          _this5.els[i].anchorBottom = bottom - anchorOffset / 2;
+          _this5.els[i].anchorBottom = bottom - anchorOffset;
         });
         this.hasScrollTicking = false;
       }

@@ -81,7 +81,7 @@ export default class {
             }
 
             if(el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
-                if(el.anchorOffset && (scrollTop >= el.anchorTop) && (scrollTop < el.anchorBottom)) {
+                if(el.anchorOffset && (scrollTop >= el.anchorTop) && (scrollTop < (el.anchorBottom))) {
                     this.setInAnchorView(el, i)
                 }
             }

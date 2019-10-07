@@ -72,7 +72,7 @@ export default class extends Core {
                 top: top + offset,
                 anchorTop: top + anchorOffset,
                 bottom: bottom,
-                anchorBottom: bottom - anchorOffset/2,
+                anchorBottom: bottom - anchorOffset,
                 offset: offset,
                 anchorOffset: anchorOffset,
                 repeat: repeat,
@@ -118,7 +118,7 @@ export default class extends Core {
             this.els[i].offset = offset;
             this.els[i].anchorOffset = anchorOffset;
             this.els[i].bottom = bottom;
-            this.els[i].anchorBottom = bottom - anchorOffset/2;
+            this.els[i].anchorBottom = bottom - anchorOffset;
 
 
         });
