@@ -265,7 +265,7 @@
           }
 
           if (el.inAnchorView) {
-            if (scrollBottom < el.anchorTop || scrollTop > el.anchorBottom) {
+            if (scrollBottom < el.anchorTop || scrollTop > el.bottom) {
               _this2.setOutOfAnchorView(el, i);
             }
           }

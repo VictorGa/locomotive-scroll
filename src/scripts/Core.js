@@ -87,7 +87,7 @@ export default class {
             }
 
             if(el.inAnchorView) {
-                if ((scrollBottom < el.anchorTop) || (scrollTop > el.anchorBottom)) {
+                if ((scrollBottom < el.anchorTop) || (scrollTop > el.bottom)) {
                     this.setOutOfAnchorView(el, i);
                 }
             }
