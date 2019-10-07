@@ -6,7 +6,6 @@ export default class {
     constructor(options = {}) {
         this.options = options;
         Object.assign(this, defaults, options);
-
         this.init();
     }
 

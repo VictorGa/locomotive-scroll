@@ -80,6 +80,20 @@ export default class {
                 }
             }
 
+
+            console.log(el.anchorTop)
+            if(el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
+                if(el.anchorOffset && (scrollBottom >= el.anchorTop) && (scrollTop < el.bottom)) {
+                    this.setInAnchorView(el, i)
+                }
+            }
+
+            if(el.inAnchorView) {
+                if ((scrollBottom < el.anchorTop) || (scrollTop > el.bottom)) {
+                    this.setOutOfAnchorView(el, i);
+                }
+            }
+
             if (el.inView) {
                 if ((scrollBottom < el.top) || (scrollTop > el.bottom)) {
                     this.setOutOfView(el, i);
@@ -102,9 +116,22 @@ export default class {
             }
         }
 
-        if (!current.repeat && !current.speed && !current.sticky) {
+        if (!current.repeat && !current.speed && !current.sticky && !current.anchorOffset) {
             if (!current.call || current.call && this.hasCallEventSet) {
                 this.els.splice(i, 1);
+            }
+        }
+    }
+
+    setInAnchorView(current, i) {
+        this.els[i].inAnchorView = true;
+        current.el.classList.add(current.anchorClass);
+
+        if (current.call && this.hasCallEventSet) {
+            this.dispatchCall(current, 'secondary-enter');
+
+            if (!current.repeat) {
+                this.els[i].call = false
             }
         }
     }
@@ -121,6 +148,16 @@ export default class {
         if (current.repeat) {
             current.el.classList.remove(current.class);
         }
+    }
+
+    setOutOfAnchorView(current, i) {
+        this.els[i].inAnchorView = false;
+
+        if (current.call && this.hasCallEventSet) {
+            this.dispatchCall(current, 'anchor-exit');
+        }
+
+        current.el.classList.remove(current.anchorClass);
     }
 
     dispatchCall(current, way) {

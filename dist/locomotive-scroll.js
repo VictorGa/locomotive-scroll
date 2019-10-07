@@ -158,12 +158,14 @@
     elMobile: document,
     name: 'scroll',
     offset: 0,
+    anchorOffset: 0,
     repeat: false,
     smooth: false,
     smoothMobile: false,
     direction: 'vertical',
     inertia: 1,
     "class": 'is-inview',
+    anchorClass: 'is-anchor-inview',
     scrollbarClass: 'c-scrollbar',
     scrollingClass: 'has-scroll-scrolling',
     draggingClass: 'has-scroll-dragging',
@@ -259,6 +261,20 @@
             }
           }
 
+          console.log(el.anchorTop);
+
+          if (el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
+            if (el.anchorOffset && scrollBottom >= el.anchorTop && scrollTop < el.bottom) {
+              _this2.setInAnchorView(el, i);
+            }
+          }
+
+          if (el.inAnchorView) {
+            if (scrollBottom < el.anchorTop || scrollTop > el.bottom) {
+              _this2.setOutOfAnchorView(el, i);
+            }
+          }
+
           if (el.inView) {
             if (scrollBottom < el.top || scrollTop > el.bottom) {
               _this2.setOutOfView(el, i);
@@ -281,9 +297,23 @@
           }
         }
 
-        if (!current.repeat && !current.speed && !current.sticky) {
+        if (!current.repeat && !current.speed && !current.sticky && !current.anchorOffset) {
           if (!current.call || current.call && this.hasCallEventSet) {
             this.els.splice(i, 1);
+          }
+        }
+      }
+    }, {
+      key: "setInAnchorView",
+      value: function setInAnchorView(current, i) {
+        this.els[i].inAnchorView = true;
+        current.el.classList.add(current.anchorClass);
+
+        if (current.call && this.hasCallEventSet) {
+          this.dispatchCall(current, 'secondary-enter');
+
+          if (!current.repeat) {
+            this.els[i].call = false;
           }
         }
       }
@@ -301,6 +331,17 @@
         if (current.repeat) {
           current.el.classList.remove(current["class"]);
         }
+      }
+    }, {
+      key: "setOutOfAnchorView",
+      value: function setOutOfAnchorView(current, i) {
+        this.els[i].inAnchorView = false;
+
+        if (current.call && this.hasCallEventSet) {
+          this.dispatchCall(current, 'anchor-exit');
+        }
+
+        current.el.classList.remove(current.anchorClass);
       }
     }, {
       key: "dispatchCall",
@@ -439,14 +480,20 @@
 
         var els = this.el.querySelectorAll('[data-' + this.name + ']');
         els.forEach(function (el, i) {
+          var _el$getBoundingClient = el.getBoundingClientRect(),
+              elTop = _el$getBoundingClient.top,
+              height = _el$getBoundingClient.height;
+
           var cl = el.dataset[_this4.name + 'Class'] || _this4["class"];
-
-          var top = el.getBoundingClientRect().top + _this4.instance.scroll.y;
-
+          var clAnchor = el.dataset[_this4.name + 'ClassAnchor'] || _this4.anchorClass;
+          var top = elTop + _this4.instance.scroll.y;
           var bottom = top + el.offsetHeight;
-          var offset = parseInt(el.dataset[_this4.name + 'Offset']) || parseInt(_this4.offset);
           var repeat = el.dataset[_this4.name + 'Repeat'];
           var call = el.dataset[_this4.name + 'Call'];
+
+          var _this4$updateOffsets = _this4.updateOffsets(el),
+              offset = _this4$updateOffsets.offset,
+              anchorOffset = _this4$updateOffsets.anchorOffset;
 
           if (repeat == 'false') {
             repeat = false;
@@ -459,14 +506,46 @@
           _this4.els[i] = {
             el: el,
             "class": cl,
+            anchorClass: clAnchor,
             top: top + offset,
+            anchorTop: top + anchorOffset,
             bottom: bottom,
             offset: offset,
+            anchorOffset: anchorOffset,
             repeat: repeat,
             inView: false,
+            inAnchorView: false,
             call: call
           };
         });
+      }
+    }, {
+      key: "updateOffsets",
+      value: function updateOffsets(el) {
+        var offset = el.dataset[this.name + 'Offset'] || this.offset;
+
+        if (el.dataset[this.name + 'Offset'] && el.dataset[this.name + 'Offset'].includes('%')) {
+          // Parse as percentage
+          offset = parseInt(el.dataset[this.name + 'Offset']);
+          offset = el.offsetHeight * (offset / 100);
+        } else {
+          offset = parseInt(offset);
+        }
+
+        var anchorOffset = el.dataset[this.name + 'AnchorOffset'] || this.anchorOffset;
+
+        if (el.dataset[this.name + 'AnchorOffset'] && el.dataset[this.name + 'AnchorOffset'].includes('%')) {
+          // Parse as percentage
+          anchorOffset = parseInt(el.dataset[this.name + 'AnchorOffset']);
+          anchorOffset = el.offsetHeight * (anchorOffset / 100);
+        } else {
+          anchorOffset = parseInt(offset);
+        }
+
+        return {
+          offset: offset,
+          anchorOffset: anchorOffset
+        };
       }
     }, {
       key: "updateElements",
@@ -476,8 +555,16 @@
         this.els.forEach(function (el, i) {
           var top = el.el.getBoundingClientRect().top + _this5.instance.scroll.y;
 
-          var bottom = top + el.el.offsetHeight;
-          _this5.els[i].top = top + el.offset;
+          var bottom = top + el.el.offsetHeight; // Update % anchor points
+
+          var _this5$updateOffsets = _this5.updateOffsets(el.el),
+              offset = _this5$updateOffsets.offset,
+              anchorOffset = _this5$updateOffsets.anchorOffset;
+
+          _this5.els[i].top = top + offset;
+          _this5.els[i].anchorTop = top + anchorOffset;
+          _this5.els[i].offset = offset;
+          _this5.els[i].anchorOffset = anchorOffset;
           _this5.els[i].bottom = bottom;
         });
         this.hasScrollTicking = false;

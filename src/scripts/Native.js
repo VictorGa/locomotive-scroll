@@ -46,14 +46,16 @@ export default class extends Core {
 
     addElements() {
         const els = this.el.querySelectorAll('[data-'+this.name+']');
-
         els.forEach((el, i) => {
+            const {top: elTop, height} = el.getBoundingClientRect();
             let cl = el.dataset[this.name + 'Class'] || this.class;
-            let top = el.getBoundingClientRect().top + this.instance.scroll.y;
+            let clAnchor = el.dataset[this.name + 'ClassAnchor'] || this.anchorClass;
+            let top = elTop + this.instance.scroll.y;
             let bottom = top + el.offsetHeight;
-            let offset = parseInt(el.dataset[this.name + 'Offset']) || parseInt(this.offset);
             let repeat = el.dataset[this.name + 'Repeat'];
             let call = el.dataset[this.name + 'Call'];
+
+            const {offset, anchorOffset} = this.updateOffsets(el);
 
             if(repeat == 'false') {
                 repeat = false;
@@ -66,14 +68,40 @@ export default class extends Core {
             this.els[i] = {
                 el: el,
                 class: cl,
+                anchorClass: clAnchor,
                 top: top + offset,
+                anchorTop: top + anchorOffset,
                 bottom: bottom,
                 offset: offset,
+                anchorOffset: anchorOffset,
                 repeat: repeat,
                 inView: false,
+                inAnchorView: false,
                 call: call
             }
         });
+    }
+
+    updateOffsets(el) {
+        let offset = el.dataset[this.name + 'Offset'] || this.offset;
+        if(el.dataset[this.name + 'Offset'] && el.dataset[this.name + 'Offset'].includes('%')) {
+            // Parse as percentage
+            offset = parseInt(el.dataset[this.name + 'Offset']);
+            offset = el.offsetHeight * (offset/100);
+        } else {
+            offset = parseInt(offset);
+        }
+
+        let anchorOffset = el.dataset[this.name + 'AnchorOffset'] || this.anchorOffset;
+        if(el.dataset[this.name + 'AnchorOffset'] && el.dataset[this.name + 'AnchorOffset'].includes('%')) {
+            // Parse as percentage
+            anchorOffset = parseInt(el.dataset[this.name + 'AnchorOffset']);
+            anchorOffset = el.offsetHeight * (anchorOffset/100);
+        } else {
+            anchorOffset = parseInt(offset);
+        }
+
+        return {offset, anchorOffset}
     }
 
     updateElements() {
@@ -81,8 +109,15 @@ export default class extends Core {
             const top = el.el.getBoundingClientRect().top + this.instance.scroll.y;
             const bottom = top + el.el.offsetHeight;
 
-            this.els[i].top = top + el.offset;
+            // Update % anchor points
+            const {offset, anchorOffset} = this.updateOffsets(el.el);
+
+            this.els[i].top = top + offset;
+            this.els[i].anchorTop = top + anchorOffset;
+            this.els[i].offset = offset;
+            this.els[i].anchorOffset = anchorOffset;
             this.els[i].bottom = bottom;
+
         });
 
         this.hasScrollTicking = false;
