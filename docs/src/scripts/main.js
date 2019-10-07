@@ -16,7 +16,7 @@ import smoothscroll from 'smoothscroll-polyfill';
     setTimeout(() => {
         const scroll = new LocomotiveScroll({
             el: document.querySelector('#js-scroll'),
-            smooth: true,
+            smooth: false,
             getSpeed: true,
             getDirection: true
         });

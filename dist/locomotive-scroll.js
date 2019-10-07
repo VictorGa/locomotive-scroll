@@ -262,13 +262,13 @@
           }
 
           if (el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
-            if (el.anchorOffset && scrollBottom >= el.anchorTop && scrollTop < el.bottom) {
+            if (el.anchorOffset && scrollTop >= el.anchorTop && scrollTop < el.anchorBottom) {
               _this2.setInAnchorView(el, i);
             }
           }
 
           if (el.inAnchorView) {
-            if (scrollBottom < el.anchorTop || scrollTop > el.bottom) {
+            if (scrollBottom < el.anchorTop || scrollTop > el.anchorBottom) {
               _this2.setOutOfAnchorView(el, i);
             }
           }
@@ -508,6 +508,7 @@
             top: top + offset,
             anchorTop: top + anchorOffset,
             bottom: bottom,
+            anchorBottom: bottom - anchorOffset / 2,
             offset: offset,
             anchorOffset: anchorOffset,
             repeat: repeat,
@@ -564,6 +565,7 @@
           _this5.els[i].offset = offset;
           _this5.els[i].anchorOffset = anchorOffset;
           _this5.els[i].bottom = bottom;
+          _this5.els[i].anchorBottom = bottom - anchorOffset / 2;
         });
         this.hasScrollTicking = false;
       }
