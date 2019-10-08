@@ -80,14 +80,15 @@ export default class {
                 }
             }
 
+            const anchorOffsetScrollTop = scrollTop - (el.top + el.offsetHeight - this.windowHeight);
             if(el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
-                if(el.anchorOffset && (scrollTop >= el.anchorTop) && (scrollTop < (el.bottom))) {
+                if(el.anchorOffset && (scrollTop >= el.anchorTop) && anchorOffsetScrollTop <= 0) {
                     this.setInAnchorView(el, i)
-                }
+                } 
             }
 
             if(el.inAnchorView) {
-                if ((scrollBottom < el.anchorTop) || (scrollTop > el.bottom)) {
+                if (anchorOffsetScrollTop > 0) {
                     this.setOutOfAnchorView(el, i);
                 }
             }

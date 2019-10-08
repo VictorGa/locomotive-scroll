@@ -68,6 +68,7 @@ export default class extends Core {
             this.els[i] = {
                 el: el,
                 class: cl,
+                offsetHeight: el.offsetHeight,
                 anchorClass: clAnchor,
                 top: top + offset,
                 anchorTop: top + anchorOffset,
@@ -117,6 +118,7 @@ export default class extends Core {
             this.els[i].anchorTop = top + anchorOffset;
             this.els[i].offset = offset;
             this.els[i].anchorOffset = anchorOffset;
+            this.els[i].offsetHeight = el.el.offsetHeight;
             this.els[i].bottom = bottom;
             this.els[i].anchorBottom = bottom - anchorOffset;
 

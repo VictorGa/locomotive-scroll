@@ -258,14 +258,16 @@
             }
           }
 
+          var anchorOffsetScrollTop = scrollTop - (el.top + el.offsetHeight - _this2.windowHeight);
+
           if (el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
-            if (el.anchorOffset && scrollTop >= el.anchorTop && scrollTop < el.bottom) {
+            if (el.anchorOffset && scrollTop >= el.anchorTop && anchorOffsetScrollTop <= 0) {
               _this2.setInAnchorView(el, i);
             }
           }
 
           if (el.inAnchorView) {
-            if (scrollBottom < el.anchorTop || scrollTop > el.bottom) {
+            if (anchorOffsetScrollTop > 0) {
               _this2.setOutOfAnchorView(el, i);
             }
           }
@@ -501,6 +503,7 @@
           _this4.els[i] = {
             el: el,
             "class": cl,
+            offsetHeight: el.offsetHeight,
             anchorClass: clAnchor,
             top: top + offset,
             anchorTop: top + anchorOffset,
@@ -561,6 +564,7 @@
           _this5.els[i].anchorTop = top + anchorOffset;
           _this5.els[i].offset = offset;
           _this5.els[i].anchorOffset = anchorOffset;
+          _this5.els[i].offsetHeight = el.el.offsetHeight;
           _this5.els[i].bottom = bottom;
           _this5.els[i].anchorBottom = bottom - anchorOffset;
         });
