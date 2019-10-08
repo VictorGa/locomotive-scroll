@@ -80,16 +80,20 @@ export default class {
                 }
             }
 
-            const anchorOffsetScrollTop = scrollTop - (el.top + el.offsetHeight - this.windowHeight);
-            if(el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
-                if(el.anchorOffset && (scrollTop >= el.anchorTop) && anchorOffsetScrollTop <= 0) {
+
+            if(typeof el.anchorOffset !== 'undefined') {
+                const anchorOffsetScrollTop = scrollTop - (el.anchorTop + (el.offsetHeight - (el.offsetHeight * .25)));
+                // console.log(el.call, el.anchorOffset, scrollTop,  el.anchorTop, anchorOffsetScrollTop)
+                if((scrollTop >= el.anchorTop) && anchorOffsetScrollTop <= 0) {
+                    console.log(el.call, 'in-anchor-view')
                     this.setInAnchorView(el, i)
                 } 
-            }
 
-            if(el.inAnchorView) {
-                if (anchorOffsetScrollTop > 0) {
-                    this.setOutOfAnchorView(el, i);
+                if(el.inAnchorView) {
+                    if (anchorOffsetScrollTop > 0) {
+                        console.log(el.call, 'out-anchor-view')
+                        this.setOutOfAnchorView(el, i);
+                    }
                 }
             }
 

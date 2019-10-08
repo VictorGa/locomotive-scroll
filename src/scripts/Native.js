@@ -94,12 +94,12 @@ export default class extends Core {
             offset = parseInt(offset);
         }
 
-        let anchorOffset = el.dataset[this.name + 'AnchorOffset'] || this.anchorOffset;
-        if(el.dataset[this.name + 'AnchorOffset'] && el.dataset[this.name + 'AnchorOffset'].includes('%')) {
+        let anchorOffset = el.dataset[this.name + 'AnchorOffset'];
+        if(typeof anchorOffset !== 'undefined' && el.dataset[this.name + 'AnchorOffset'] && el.dataset[this.name + 'AnchorOffset'].includes('%')) {
             // Parse as percentage
             anchorOffset = parseInt(el.dataset[this.name + 'AnchorOffset']);
             anchorOffset = el.offsetHeight * (anchorOffset/100);
-        } else {
+        } else if(typeof anchorOffset !== 'undefined') {
             anchorOffset = parseInt(anchorOffset);
         }
 

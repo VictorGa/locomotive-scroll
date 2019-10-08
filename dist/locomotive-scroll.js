@@ -261,17 +261,22 @@
             }
           }
 
-          var anchorOffsetScrollTop = scrollTop - (el.top + el.offsetHeight - _this2.windowHeight);
+          if (typeof el.anchorOffset !== 'undefined') {
+            var anchorOffsetScrollTop = scrollTop - (el.anchorTop + (el.offsetHeight - el.offsetHeight * .25));
+            console.log(el.call, el.anchorOffset, scrollTop, el.anchorTop, anchorOffsetScrollTop);
 
-          if (el.anchorOffset && !el.inAnchorView || hasCallEventSet) {
-            if (el.anchorOffset && scrollTop >= el.anchorTop && anchorOffsetScrollTop <= 0) {
+            if (scrollTop >= el.anchorTop && anchorOffsetScrollTop <= 0) {
+              console.log(el.call, 'in-anchor-view');
+
               _this2.setInAnchorView(el, i);
             }
-          }
 
-          if (el.inAnchorView) {
-            if (anchorOffsetScrollTop > 0) {
-              _this2.setOutOfAnchorView(el, i);
+            if (el.inAnchorView) {
+              if (anchorOffsetScrollTop > 0) {
+                console.log(el.call, 'out-anchor-view');
+
+                _this2.setOutOfAnchorView(el, i);
+              }
             }
           }
 
@@ -534,13 +539,13 @@
           offset = parseInt(offset);
         }
 
-        var anchorOffset = el.dataset[this.name + 'AnchorOffset'] || this.anchorOffset;
+        var anchorOffset = el.dataset[this.name + 'AnchorOffset'];
 
-        if (el.dataset[this.name + 'AnchorOffset'] && el.dataset[this.name + 'AnchorOffset'].includes('%')) {
+        if (typeof anchorOffset !== 'undefined' && el.dataset[this.name + 'AnchorOffset'] && el.dataset[this.name + 'AnchorOffset'].includes('%')) {
           // Parse as percentage
           anchorOffset = parseInt(el.dataset[this.name + 'AnchorOffset']);
           anchorOffset = el.offsetHeight * (anchorOffset / 100);
-        } else {
+        } else if (typeof anchorOffset !== 'undefined') {
           anchorOffset = parseInt(anchorOffset);
         }
 
