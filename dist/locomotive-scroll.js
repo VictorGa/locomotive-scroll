@@ -296,12 +296,12 @@
         if (current.call && this.hasCallEventSet) {
           this.dispatchCall(current, 'enter');
 
-          if (!current.repeat) {
+          if (!current.repeat && typeof current.anchorOffset === 'undefined') {
             this.els[i].call = false;
           }
         }
 
-        if (!current.repeat && !current.speed && !current.sticky && !current.anchorOffset) {
+        if (!current.repeat && !current.speed && !current.sticky && typeof current.anchorOffset === 'undefined') {
           if (!current.call || current.call && this.hasCallEventSet) {
             this.els.splice(i, 1);
           }
@@ -314,17 +314,15 @@
         current.el.classList.add(current.anchorClass);
 
         if (current.call && this.hasCallEventSet) {
-          this.dispatchCall(current, 'anchor-enter');
-
-          if (!current.repeat) {
-            this.els[i].call = false;
-          }
+          this.dispatchCall(current, 'anchor-enter'); // if (!current.repeat) {
+          //     this.els[i].call = false
+          // }
         }
       }
     }, {
       key: "setOutOfView",
       value: function setOutOfView(current, i) {
-        if (current.repeat || current.speed !== undefined) {
+        if (current.speed !== undefined) {
           this.els[i].inView = false;
         }
 
