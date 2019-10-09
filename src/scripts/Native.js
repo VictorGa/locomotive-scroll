@@ -17,10 +17,9 @@ export default class extends Core {
     }
 
     checkScroll() {
-        super.checkScroll();
-
+        this.instance.scroll.y = window.scrollY;
+        
         if (this.els.length) {
-            this.instance.scroll.y = window.scrollY;
 
             if(!this.hasScrollTicking) {
                 requestAnimationFrame(() => {
@@ -29,6 +28,9 @@ export default class extends Core {
                 this.hasScrollTicking = true;
             }
         }
+
+        //TODO: Find other way
+        this.dispatchScroll();
     }
 
     checkResize() {

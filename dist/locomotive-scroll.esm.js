@@ -256,8 +256,7 @@ function () {
         }
 
         if (typeof el.anchorOffset !== 'undefined') {
-          var anchorOffsetScrollTop = scrollTop - (el.anchorTop + (el.offsetHeight - el.offsetHeight * .25));
-          console.log(el.call, el.anchorOffset, scrollTop, el.anchorTop, anchorOffsetScrollTop);
+          var anchorOffsetScrollTop = scrollTop - (el.anchorTop + (el.offsetHeight - el.offsetHeight * .25)); // console.log(el.call, el.anchorOffset, scrollTop,  el.anchorTop, anchorOffsetScrollTop)
 
           if (scrollTop >= el.anchorTop && anchorOffsetScrollTop <= 0) {
             console.log(el.call, 'in-anchor-view');
@@ -443,18 +442,19 @@ function (_Core) {
     value: function checkScroll() {
       var _this2 = this;
 
-      _get(_getPrototypeOf(_default.prototype), "checkScroll", this).call(this);
+      this.instance.scroll.y = window.scrollY;
 
       if (this.els.length) {
-        this.instance.scroll.y = window.scrollY;
-
         if (!this.hasScrollTicking) {
           requestAnimationFrame(function () {
             _this2.detectElements();
           });
           this.hasScrollTicking = true;
         }
-      }
+      } //TODO: Find other way
+
+
+      this.dispatchScroll();
     }
   }, {
     key: "checkResize",
