@@ -9,6 +9,7 @@ export const defaults = {
     smoothMobile: false,
     direction: 'vertical',
     inertia: 1,
+    fixedFooter: false,
     class: 'is-inview',
     anchorClass: 'is-anchor-inview',
     scrollbarClass: 'c-scrollbar',

@@ -164,6 +164,7 @@
     smoothMobile: false,
     direction: 'vertical',
     inertia: 1,
+    fixedFooter: false,
     "class": 'is-inview',
     anchorClass: 'is-anchor-inview',
     scrollbarClass: 'c-scrollbar',
@@ -1275,7 +1276,7 @@
     }, {
       key: "setScrollLimit",
       value: function setScrollLimit() {
-        this.instance.limit = this.el.offsetHeight - this.windowHeight;
+        this.instance.limit = this.el.offsetHeight - (this.fixedFooter ? 0 : this.windowHeight);
       }
     }, {
       key: "startScrolling",

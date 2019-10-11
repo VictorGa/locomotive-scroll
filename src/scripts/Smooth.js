@@ -76,7 +76,7 @@ export default class extends Core {
     }
 
     setScrollLimit() {
-        this.instance.limit = this.el.offsetHeight - this.windowHeight;
+        this.instance.limit = this.el.offsetHeight - (this.fixedFooter ? 0 : this.windowHeight);
     }
 
     startScrolling() {

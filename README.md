@@ -80,7 +80,8 @@ scroll.on('call', (func) => {
 | `smoothMobile` | `boolean` | `false` | Smooth scrolling on iOS and Android devices. |
 | `direction` | `string` | `vertical` | Scroll direction. |
 | `inertia` | `number` | `1` | Lerp intensity. |
-| `getDirection` | `boolean` | `false` | Add direction to scroll event. |
+| `fixedFooter` | `boolean` | `false` | Lerp intensity. |
+| `getDirection` | `boolean` | `false` | Hidden element footer at the bottom, revealed by the scroll container |
 | `getSpeed` | `boolean` | `false` | Add speed to scroll event. |
 | `class` | `string` | `is-inview` | Element in-view class. |
 | `initClass` | `string` | `has-scroll-init` | Initialize class. |
