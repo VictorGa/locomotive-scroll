@@ -844,7 +844,6 @@ var lethargy = createCommonjsModule(function (module, exports) {
         this.lastDownDeltas.shift();
         return this.isInertia(-1);
       }
-      return false;
     };
 
     Lethargy.prototype.isInertia = function(direction) {
@@ -1508,6 +1507,7 @@ function (_Core) {
 
         els.forEach(function (el, i) {
           var cl = el.dataset[_this6.name + 'Class'] || _this6["class"];
+          var clAnchor = el.dataset[_this6.name + 'ClassAnchor'] || _this6.anchorClass;
           var top;
           var repeat = el.dataset[_this6.name + 'Repeat'];
           var call = el.dataset[_this6.name + 'Call'];
@@ -1515,8 +1515,8 @@ function (_Core) {
           var delay = el.dataset[_this6.name + 'Delay'];
           var direction = el.dataset[_this6.name + 'Direction'];
           var sticky = typeof el.dataset[_this6.name + 'Sticky'] === 'string';
-          var speed = el.dataset[_this6.name + 'Speed'] ? parseFloat(el.dataset[_this6.name + 'Speed']) / 10 : false;
-          var offset = typeof el.dataset[_this6.name + 'Offset'] === 'string' ? el.dataset[_this6.name + 'Offset'].split(',') : false;
+          var speed = el.dataset[_this6.name + 'Speed'] ? parseFloat(el.dataset[_this6.name + 'Speed']) / 10 : false; // let offset = (typeof el.dataset[this.name + 'Offset'] === 'string') ? el.dataset[this.name + 'Offset'].split(',') : false;
+
           var target = el.dataset[_this6.name + 'Target'];
           var targetEl;
 
@@ -1550,27 +1550,33 @@ function (_Core) {
             repeat = _this6.repeat;
           }
 
-          var relativeOffset = [0, 0];
+          var _this6$updateOffsets = _this6.updateOffsets(el),
+              offset = _this6$updateOffsets.offset,
+              anchorOffset = _this6$updateOffsets.anchorOffset; // let relativeOffset = [0,0];
+          // if(offset) {
+          //     for (var i = 0; i < offset.length; i++) {
+          //         if(offset[i].includes('%')) {
+          //             relativeOffset[i] = parseInt(offset[i].replace('%','') * this.windowHeight / 100);
+          //         } else {
+          //             relativeOffset[i] = parseInt(offset[i]);
+          //         }
+          //     }
+          // }
 
-          if (offset) {
-            for (var i = 0; i < offset.length; i++) {
-              if (offset[i].includes('%')) {
-                relativeOffset[i] = parseInt(offset[i].replace('%', '') * _this6.windowHeight / 100);
-              } else {
-                relativeOffset[i] = parseInt(offset[i]);
-              }
-            }
-          }
 
           var mappedEl = {
             el: el,
             id: count,
             "class": cl,
-            top: top + relativeOffset[0],
+            anchorClass: clAnchor,
+            top: top + offset,
+            anchorTop: top + anchorOffset,
             middle: middle,
-            bottom: bottom - relativeOffset[1],
+            bottom: bottom - offset,
             offset: offset,
             repeat: repeat,
+            anchorOffset: anchorOffset,
+            offsetHeight: el.offsetHeight,
             inView: false,
             call: call,
             speed: speed,
@@ -1589,6 +1595,35 @@ function (_Core) {
           }
         });
       });
+    }
+  }, {
+    key: "updateOffsets",
+    value: function updateOffsets(el) {
+      var offset = el.dataset[this.name + 'Offset'] || this.offset;
+
+      if (el.dataset[this.name + 'Offset'] && el.dataset[this.name + 'Offset'].includes('%')) {
+        // Parse as percentage
+        offset = parseInt(el.dataset[this.name + 'Offset']);
+        offset = el.offsetHeight * (offset / 100);
+      } else {
+        offset = parseInt(offset);
+      } // console.log(this.name, el.dataset, el.dataset[this.name + 'AnchorOffset'], el.dataset[this.name + 'Offset'])
+
+
+      var anchorOffset = el.dataset[this.name + 'AnchorOffset'];
+
+      if (typeof anchorOffset !== 'undefined' && el.dataset[this.name + 'AnchorOffset'] && el.dataset[this.name + 'AnchorOffset'].includes('%')) {
+        // Parse as percentage
+        anchorOffset = parseInt(el.dataset[this.name + 'AnchorOffset']);
+        anchorOffset = el.offsetHeight * (anchorOffset / 100);
+      } else if (typeof anchorOffset !== 'undefined') {
+        anchorOffset = parseInt(anchorOffset);
+      }
+
+      return {
+        offset: offset,
+        anchorOffset: anchorOffset
+      };
     }
   }, {
     key: "addSections",

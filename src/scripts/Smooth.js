@@ -288,6 +288,7 @@ export default class extends Core {
 
             els.forEach((el, i) => {
                 let cl = el.dataset[this.name + 'Class'] || this.class;
+                let clAnchor = el.dataset[this.name + 'ClassAnchor'] || this.anchorClass;
                 let top;
                 let repeat = el.dataset[this.name + 'Repeat'];
                 let call = el.dataset[this.name + 'Call'];
@@ -296,7 +297,7 @@ export default class extends Core {
                 let direction = el.dataset[this.name + 'Direction'];
                 let sticky = typeof el.dataset[this.name + 'Sticky'] === 'string';
                 let speed = el.dataset[this.name + 'Speed'] ? parseFloat(el.dataset[this.name + 'Speed'])/10 : false;
-                let offset = (typeof el.dataset[this.name + 'Offset'] === 'string') ? el.dataset[this.name + 'Offset'].split(',') : false;
+                // let offset = (typeof el.dataset[this.name + 'Offset'] === 'string') ? el.dataset[this.name + 'Offset'].split(',') : false;
 
                 let target = el.dataset[this.name + 'Target'];
                 let targetEl;
@@ -332,26 +333,32 @@ export default class extends Core {
                     repeat = this.repeat;
                 }
 
-                let relativeOffset = [0,0];
-                if(offset) {
-                    for (var i = 0; i < offset.length; i++) {
-                        if(offset[i].includes('%')) {
-                            relativeOffset[i] = parseInt(offset[i].replace('%','') * this.windowHeight / 100);
-                        } else {
-                            relativeOffset[i] = parseInt(offset[i]);
-                        }
-                    }
-                }
+                const {offset, anchorOffset} = this.updateOffsets(el);
+
+                // let relativeOffset = [0,0];
+                // if(offset) {
+                //     for (var i = 0; i < offset.length; i++) {
+                //         if(offset[i].includes('%')) {
+                //             relativeOffset[i] = parseInt(offset[i].replace('%','') * this.windowHeight / 100);
+                //         } else {
+                //             relativeOffset[i] = parseInt(offset[i]);
+                //         }
+                //     }
+                // }
 
                 const mappedEl = {
                     el,
                     id: count,
                     class: cl,
-                    top: top + relativeOffset[0],
+                    anchorClass: clAnchor,
+                    top: top + offset,
+                    anchorTop: top + anchorOffset,
                     middle,
-                    bottom: bottom - relativeOffset[1],
+                    bottom: bottom - offset,
                     offset,
                     repeat,
+                    anchorOffset,
+                    offsetHeight: el.offsetHeight,
                     inView: false,
                     call,
                     speed,
@@ -371,6 +378,29 @@ export default class extends Core {
             });
 
         })
+    }
+
+    updateOffsets(el) {
+        let offset = el.dataset[this.name + 'Offset'] || this.offset;
+        if(el.dataset[this.name + 'Offset'] && el.dataset[this.name + 'Offset'].includes('%')) {
+            // Parse as percentage
+            offset = parseInt(el.dataset[this.name + 'Offset']);
+            offset = el.offsetHeight * (offset/100);
+        } else {
+            offset = parseInt(offset);
+        }
+
+        // console.log(this.name, el.dataset, el.dataset[this.name + 'AnchorOffset'], el.dataset[this.name + 'Offset'])
+        let anchorOffset = el.dataset[this.name + 'AnchorOffset'];
+        if(typeof anchorOffset !== 'undefined' && el.dataset[this.name + 'AnchorOffset'] && el.dataset[this.name + 'AnchorOffset'].includes('%')) {
+            // Parse as percentage
+            anchorOffset = parseInt(el.dataset[this.name + 'AnchorOffset']);
+            anchorOffset = el.offsetHeight * (anchorOffset/100);
+        } else if(typeof anchorOffset !== 'undefined') {
+            anchorOffset = parseInt(anchorOffset);
+        }
+
+        return {offset, anchorOffset}
     }
 
     addSections() {
